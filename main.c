@@ -63,6 +63,13 @@ struct thread_info
 
     return 0;
 }*/
+void ShowHelp(char *programName)
+{
+    printf("Usage: %s\n", programName);
+    printf("       %s [file path to read from]\n", programName);
+    printf("       %s [file path to read from] [file path to write to]\n", programName);
+    exit(0);
+}
 void reformat_string(char *src, char *dst)
 {
     for (; *src; ++src)
