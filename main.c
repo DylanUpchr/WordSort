@@ -279,9 +279,15 @@ int main(int argc, char const *argv[])
         }
     }*/
     printf("Start insertion sort\n");
+
     for (size_t i = 0; i < nbArrays; i++)
     {
-        InsertionSort(sortedWordsArrays[i], sizeof(sortedWordsArrays[i]) / sizeof(sortedWordsArrays[i][0]));
+        int arraySize = 0;
+        while (sortedWordsArrays[i][arraySize] != NULL)
+        {
+            arraySize++;
+        }
+        InsertionSort(sortedWordsArrays[i], arraySize - 1);
     }
 
     /*for (size_t i = 0; i < nbArrays; i++)
@@ -304,13 +310,16 @@ int main(int argc, char const *argv[])
 
     //Write sorted words to file
     gettimeofday(&start, NULL);
-    file = fopen(WRITE_PATH, "w");
-    int arraySize;
+    file = fopen(WRITE_PATH, "w+");
     for (size_t i = 0; i < nbArrays; i++)
     {
-        arraySize = sizeof(sortedWordsArrays[i]) / sizeof(sortedWordsArrays[i][0]);
-        printf("%i\n", arraySize);
-        for (size_t j = 0; j < arraySize; i++)
+        int arraySize = 0;
+        while (sortedWordsArrays[i][arraySize] != NULL)
+        {
+            arraySize++;
+        }
+
+        for (size_t j = 0; j < arraySize - 1; j++)
         {
             fprintf(file, "%s\n", sortedWordsArrays[i][j]);
         }
