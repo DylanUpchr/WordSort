@@ -140,46 +140,32 @@ int main(int argc, char const *argv[])
     StsHeader *treatedLineQueue = StsQueue.create();
     StsHeader *unSortedArraysQueue = StsQueue.create();
     long queueSize = 0;
-    /*stack_size = 10;
-    num_master_threads = 1;
-    s = pthread_attr_init(&attr);
-    s = pthread_attr_setstacksize(&attr, stack_size);
-    struct thread_info *tinfo = calloc(num_master_threads, sizeof(tinfo));
-
-    for (int tnum = 0; tnum < num_master_threads; tnum++)
+    //Accept arguments
+    char *readPath, *writePath;
+    if (argc == 1)
     {
-        pthread_t thread;
-        tinfo[tnum].thread_id = thread;
-        tinfo[tnum].thread_num = tnum + 1;
-        //tinfo[tnum].argv_string = argv[optind + tnum];*/
-
-    /* The pthread_create() call stores the thread ID into
-                  corresponding element of tinfo[] */
-
-    /*s = pthread_create(&tinfo[tnum].thread_id , &attr, &master, rawLinesQueue);
-        if (s != 0)
-            handle_error_en(s, "pthread_create");
+        readPath = DEFAULT_READ_PATH;
+        writePath = DEFAULT_WRITE_PATH;
     }
-    s = pthread_attr_destroy(&attr);
-    if (s != 0)
-        handle_error_en(s, "pthread_attr_destroy");*/
-
-    /* Now join with each thread, and display its returned value */
-
-    /*for (int tnum = 0; tnum < num_master_threads; tnum++)
+    else if (argc == 2)
     {
-        s = pthread_join(tinfo[tnum].thread_id, &res);
-        if (s != 0)
-            handle_error_en(s, "pthread_join");
+        if (strcmp(argv[1], "-h") == 0)
+        {
+            ShowHelp(strdup(argv[0]));
+        }
+        else
+        {
+            readPath = strdup(argv[1]);
+            writePath = DEFAULT_WRITE_PATH;
+        }
+    }
+    else if (argc == 3)
+    {
+        readPath = strdup(argv[1]);
+        writePath = strdup(argv[2]);
+    }
 
-        printf("Joined with master thread %d; returned value was %i\n",
-               tinfo[tnum].thread_num, res);
-        //free(res); //Free memory allocated by thread
-    }*/
-    //Read file
-
-    //File read and word seperation
-    FILE *file = fopen(READ_PATH, "r");
+    FILE *file = fopen(readPath, "r");
     double ingestTimeSeconds, separationTimeSeconds, sortTimeSeconds, writeTimeSeconds, totalTimeSeconds;
     char str[LINE_LENGTH];
     char treatedLine[LINE_LENGTH];
@@ -209,7 +195,7 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        fprintf(stderr, "Unable to open file %s\n", READ_PATH);
+        fprintf(stderr, "Unable to open file %s\n", readPath);
         exit(1);
     }
     fclose(file);
@@ -310,7 +296,7 @@ int main(int argc, char const *argv[])
 
     //Write sorted words to file
     gettimeofday(&start, NULL);
-    file = fopen(WRITE_PATH, "w+");
+    file = fopen(writePath, "w+");
     for (size_t i = 0; i < nbArrays; i++)
     {
         int arraySize = 0;
